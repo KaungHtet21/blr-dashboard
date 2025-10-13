@@ -23,21 +23,45 @@ const PageContainer = styled.div`
   padding: 24px;
   background: #f5f5f5;
   min-height: 100vh;
+  
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 12px;
+  }
 `;
 
 const PageHeader = styled.div`
   margin-bottom: 24px;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 16px;
+  }
 `;
 
 const FilterCard = styled(Card)`
   margin-bottom: 24px;
   border-radius: 8px;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 16px;
+  }
 `;
 
 const StyledTable = styled(Table)`
   .ant-table-thead > tr > th {
     background: #fafafa;
     font-weight: 600;
+  }
+  
+  @media (max-width: 768px) {
+    .ant-table-thead > tr > th,
+    .ant-table-tbody > tr > td {
+      padding: 8px 4px;
+      font-size: 12px;
+    }
   }
 `;
 
@@ -60,6 +84,7 @@ const GivePremiumPage: React.FC = () => {
       dataIndex: 'id',
       key: 'id',
       width: 80,
+      responsive: ['md'] as any,
     },
     {
       title: 'Email',
@@ -85,6 +110,7 @@ const GivePremiumPage: React.FC = () => {
       dataIndex: 'createdAt',
       key: 'createdAt',
       width: 120,
+      responsive: ['lg'] as any,
       render: (date: string) => new Date(date).toLocaleDateString(),
     },
     {
@@ -186,8 +212,10 @@ const GivePremiumPage: React.FC = () => {
             showQuickJumper: true,
             showTotal: (total, range) =>
               `${range[0]}-${range[1]} of ${total} users`,
+            responsive: true,
+            size: 'small',
           }}
-          scroll={{ x: 800 }}
+          scroll={{ x: 600 }}
         />
       </Card>
 

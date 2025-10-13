@@ -17,3 +17,38 @@ html, body {
 #root {
   height: 100%;
 }
+
+/* Mobile responsiveness improvements */
+@media (max-width: 768px) {
+  .ant-layout-sider {
+    position: fixed !important;
+    height: 100vh;
+    z-index: 1000;
+  }
+  
+  .ant-layout-content {
+    margin-left: 0 !important;
+  }
+  
+  .ant-table-pagination {
+    text-align: center;
+  }
+  
+  .ant-table-pagination .ant-pagination-options {
+    display: none;
+  }
+  
+  .ant-table-pagination .ant-pagination-simple-pager {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 480px) {
+  .ant-table-pagination .ant-pagination-total-text {
+    display: none;
+  }
+  
+  .ant-table-pagination .ant-pagination-simple-pager {
+    margin: 0 8px;
+  }
+}

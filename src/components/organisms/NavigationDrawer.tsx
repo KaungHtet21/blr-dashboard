@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, Button, Typography, Avatar } from 'antd';
+import { Layout, Menu, Button, Typography, Avatar, Drawer } from 'antd';
 import { 
   UserOutlined, 
   CrownOutlined, 
@@ -19,6 +19,12 @@ const StyledSider = styled(Sider)`
     background: #f0f2f5;
     color: #1890ff;
     border-top: 1px solid #f0f0f0;
+  }
+
+  @media (max-width: 768px) {
+    position: fixed !important;
+    height: 100vh;
+    z-index: 1000;
   }
 `;
 
@@ -46,12 +52,16 @@ interface NavigationDrawerProps {
   collapsed: boolean;
   selectedKey: string;
   onMenuClick: (key: string) => void;
+  isMobile?: boolean;
+  onMobileClose?: () => void;
 }
 
 const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
   collapsed,
   selectedKey,
   onMenuClick,
+  isMobile = false,
+  onMobileClose,
 }) => {
   const { logout, user } = useAuth();
 
@@ -68,14 +78,15 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
     },
   ];
 
-  return (
-    <StyledSider
-      trigger={null}
-      collapsible
-      collapsed={collapsed}
-      width={250}
-      collapsedWidth={80}
-    >
+  const handleMenuClick = (key: string) => {
+    onMenuClick(key);
+    if (isMobile && onMobileClose) {
+      onMobileClose();
+    }
+  };
+
+  const drawerContent = (
+    <>
       <LogoContainer>
         {!collapsed ? (
           <Text strong style={{ fontSize: '18px', color: '#1890ff' }}>
@@ -112,7 +123,7 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
         mode="inline"
         selectedKeys={[selectedKey]}
         items={menuItems}
-        onClick={({ key }) => onMenuClick(key)}
+        onClick={({ key }) => handleMenuClick(key)}
         style={{ border: 'none' }}
       />
 
@@ -126,6 +137,33 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
           {!collapsed && 'Logout'}
         </LogoutButton>
       </div>
+    </>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer
+        title="BLR Dashboard"
+        placement="left"
+        onClose={onMobileClose}
+        open={!collapsed}
+        width={250}
+        bodyStyle={{ padding: 0 }}
+      >
+        {drawerContent}
+      </Drawer>
+    );
+  }
+
+  return (
+    <StyledSider
+      trigger={null}
+      collapsible
+      collapsed={collapsed}
+      width={250}
+      collapsedWidth={80}
+    >
+      {drawerContent}
     </StyledSider>
   );
 };
