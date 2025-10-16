@@ -16,7 +16,6 @@ import {
 } from 'antd';
 import { SearchOutlined, UserAddOutlined, UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import type { AdminUser } from '../types';
 import { useAuth } from '../hooks/useAuth';
 import { adminService } from '../services/authService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
