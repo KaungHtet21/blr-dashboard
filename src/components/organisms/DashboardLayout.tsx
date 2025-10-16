@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import NavigationDrawer from './NavigationDrawer';
 import UsersPage from '../../pages/UsersPage';
 import GivePremiumPage from '../../pages/GivePremiumPage';
+import AdminManagementPage from '../../pages/AdminManagementPage';
 
 const { Header, Content } = Layout;
 
@@ -82,6 +83,8 @@ const DashboardLayout: React.FC = () => {
         return <UsersPage />;
       case 'premium':
         return <GivePremiumPage />;
+      case 'admin-management':
+        return <AdminManagementPage />;
       default:
         return <UsersPage />;
     }

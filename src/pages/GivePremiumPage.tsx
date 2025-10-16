@@ -10,7 +10,8 @@ import {
   Card,
   Row,
   Col,
-  Modal
+  Modal,
+  Radio
 } from 'antd';
 import { SearchOutlined, CrownOutlined, UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
@@ -69,6 +70,7 @@ const GivePremiumPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedDuration, setSelectedDuration] = useState<'1_month' | '1_year'>('1_year');
   
   const { data, isLoading, error } = useUsers({
     page: 1,
@@ -144,11 +146,15 @@ const GivePremiumPage: React.FC = () => {
     if (!selectedUser) return;
 
     try {
-      const result = await givePremiumMutation.mutateAsync(selectedUser.id);
+      const result = await givePremiumMutation.mutateAsync({
+        userId: selectedUser.id,
+        duration: selectedDuration
+      });
       if (result.success) {
         message.success(result.message);
         setModalVisible(false);
         setSelectedUser(null);
+        setSelectedDuration('1_year'); // Reset to default
       } else {
         message.error(result.message);
       }
@@ -160,6 +166,7 @@ const GivePremiumPage: React.FC = () => {
   const handleModalCancel = () => {
     setModalVisible(false);
     setSelectedUser(null);
+    setSelectedDuration('1_year'); // Reset to default
   };
 
   // Show error message if there's an error
@@ -254,6 +261,29 @@ const GivePremiumPage: React.FC = () => {
                 </div>
               </Space>
             </div>
+            
+            <div style={{ margin: '16px 0' }}>
+              <p style={{ marginBottom: '12px', fontWeight: 500 }}>
+                <strong>Select Premium Duration:</strong>
+              </p>
+              <Radio.Group 
+                value={selectedDuration} 
+                onChange={(e) => setSelectedDuration(e.target.value)}
+                style={{ width: '100%' }}
+              >
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  <Radio value="1_month" style={{ display: 'block', height: '30px', lineHeight: '30px' }}>
+                    <span style={{ fontWeight: 500 }}>1 Month</span>
+                    <span style={{ color: '#666', marginLeft: '8px' }}>30 days of premium access</span>
+                  </Radio>
+                  <Radio value="1_year" style={{ display: 'block', height: '30px', lineHeight: '30px' }}>
+                    <span style={{ fontWeight: 500 }}>1 Year</span>
+                    <span style={{ color: '#666', marginLeft: '8px' }}>365 days of premium access</span>
+                  </Radio>
+                </Space>
+              </Radio.Group>
+            </div>
+            
             <p style={{ color: '#666', fontSize: '14px' }}>
               This action will grant premium access to the user and cannot be undone.
             </p>

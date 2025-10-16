@@ -1,9 +1,10 @@
 import React from 'react';
-import { Layout, Menu, Button, Typography, Avatar, Drawer } from 'antd';
+import { Layout, Menu, Button, Typography, Avatar, Drawer, Tag } from 'antd';
 import { 
   UserOutlined, 
   CrownOutlined, 
-  LogoutOutlined
+  LogoutOutlined,
+  TeamOutlined
 } from '@ant-design/icons';
 import styled from 'styled-components';
 import { useAuth } from '../../hooks/useAuth';
@@ -65,18 +66,31 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
 }) => {
   const { logout, user } = useAuth();
 
-  const menuItems = [
-    {
-      key: 'users',
-      icon: <UserOutlined />,
-      label: 'Users Management',
-    },
-    {
-      key: 'premium',
-      icon: <CrownOutlined />,
-      label: 'Give Premium',
-    },
-  ];
+  const getMenuItems = () => {
+    const baseItems = [
+      {
+        key: 'users',
+        icon: <UserOutlined />,
+        label: 'Users Management',
+      },
+      {
+        key: 'premium',
+        icon: <CrownOutlined />,
+        label: 'Give Premium',
+      },
+    ];
+
+    // Only admins can see admin management
+    if (user?.role === 'admin') {
+      baseItems.push({
+        key: 'admin-management',
+        icon: <TeamOutlined />,
+        label: 'Admin Management',
+      });
+    }
+
+    return baseItems;
+  };
 
   const handleMenuClick = (key: string) => {
     onMenuClick(key);
@@ -109,12 +123,14 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
           <div>
             <div>
               <Text strong style={{ fontSize: '14px' }}>
-                {user?.email}
+                {user?.username}
               </Text>
             </div>
-            <Text type="secondary" style={{ fontSize: '12px' }}>
-              Administrator
-            </Text>
+            <div style={{ marginTop: 4 }}>
+              <Tag color={user?.role === 'admin' ? 'red' : 'blue'}>
+                {user?.role?.toUpperCase()}
+              </Tag>
+            </div>
           </div>
         )}
       </UserInfo>
@@ -122,7 +138,7 @@ const NavigationDrawer: React.FC<NavigationDrawerProps> = ({
       <Menu
         mode="inline"
         selectedKeys={[selectedKey]}
-        items={menuItems}
+        items={getMenuItems()}
         onClick={({ key }) => handleMenuClick(key)}
         style={{ border: 'none' }}
       />

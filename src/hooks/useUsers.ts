@@ -35,7 +35,8 @@ export const useGivePremium = () => {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (userId: string) => userService.givePremium(userId),
+    mutationFn: ({ userId, duration }: { userId: string; duration: '1_month' | '1_year' }) => 
+      userService.givePremium(userId, duration),
     onSuccess: () => {
       // Invalidate and refetch users data
       queryClient.invalidateQueries({ queryKey: ['users'] });

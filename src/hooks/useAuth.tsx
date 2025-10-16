@@ -26,15 +26,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [authState, setAuthState] = useState<AuthState>({
     isAuthenticated: false,
     user: null,
+    token: null,
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = () => {
       const isAuthenticated = authService.isAuthenticated();
+      const user = authService.getCurrentUser();
+      const token = authService.getToken();
       setAuthState({
         isAuthenticated,
-        user: isAuthenticated ? { id: 'admin', email: 'nox@gmail.com', hasPremium: true, createdAt: '', updatedAt: '' } : null,
+        user,
+        token,
       });
       setLoading(false);
     };
@@ -46,10 +50,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setLoading(true);
     try {
       const result = await authService.login(credentials);
-      if (result.success) {
+      if (result.success && result.adminUser && result.accessToken) {
         setAuthState({
           isAuthenticated: true,
-          user: { id: 'admin', email: 'nox@gmail.com', hasPremium: true, createdAt: '', updatedAt: '' },
+          user: result.adminUser,
+          token: result.accessToken,
         });
       }
       return result;
@@ -63,6 +68,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setAuthState({
       isAuthenticated: false,
       user: null,
+      token: null,
     });
   };
 

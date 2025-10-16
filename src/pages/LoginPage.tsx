@@ -69,16 +69,16 @@ const LoginPage: React.FC = () => {
           layout="vertical"
         >
           <Form.Item
-            name="email"
-            label="Email"
+            name="username"
+            label="Username"
             rules={[
-              { required: true, message: 'Please input your email!' },
-              { type: 'email', message: 'Please enter a valid email!' }
+              { required: true, message: 'Please input your username!' },
+              { min: 3, message: 'Username must be at least 3 characters!' }
             ]}
           >
             <Input
               prefix={<UserOutlined />}
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               size="large"
             />
           </Form.Item>
@@ -109,7 +109,7 @@ const LoginPage: React.FC = () => {
 
         <div style={{ textAlign: 'center', marginTop: '16px' }}>
           <p style={{ color: '#999', fontSize: '12px' }}>
-            Demo credentials: nox@gmail.com / admin123
+            Contact administrator for login credentials
           </p>
         </div>
       </LoginCard>
